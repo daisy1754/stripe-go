@@ -464,7 +464,14 @@ func (s *BackendImplementation) Do(req *http.Request, body *bytes.Buffer, v inte
 func (s *BackendImplementation) ResponseToError(res *http.Response, resBody []byte) error {
 	var raw rawError
 	if err := s.UnmarshalJSONVerbose(res.StatusCode, resBody, &raw); err != nil {
-		return err
+		// If deserializing the error json fails at the top level, we retry
+		// serializing at the error level because the shape of error response body
+		// for the API is different from the OAuth error response.
+		var topLevelError rawErrorInternal
+		if err := s.UnmarshalJSONVerbose(res.StatusCode, resBody, &topLevelError); err != nil {
+			return err
+		}
+		raw.E = &topLevelError
 	}
 
 	// no error in resBody

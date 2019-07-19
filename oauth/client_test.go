@@ -235,10 +235,9 @@ func TestNewOAuthTokenWithError(t *testing.T) {
 	assert.NotNil(t, err)
 
 	stripeErr := err.(*stripe.Error)
-  // TODO: I think this is what I want to test once we get the structure right.
 	assert.Equal(t, 400, stripeErr.HTTPStatusCode)
-	assert.Equal(t, "Authorization code does not exist", stripeErr.Msg)
-	assert.Equal(t, "invalid_grant", stripeErr.Type)
+	assert.Equal(t, "Authorization code does not exist", stripeErr.OAuthErrorDescription)
+	assert.Equal(t, "invalid_grant", stripeErr.OAuthError)
 }
 
 func TestDeauthorize(t *testing.T) {

@@ -36,7 +36,7 @@ func (c Client) AuthorizeURL(params *stripe.AuthorizeURLParams) string {
 	form.AppendTo(qs, params)
 	return fmt.Sprintf(
 		"%s%s/oauth/authorize?%s",
-    stripe.ConnectURL,
+		stripe.ConnectURL,
 		express,
 		qs.Encode(),
 	)
@@ -52,9 +52,6 @@ func (c Client) New(params *stripe.OAuthTokenParams) (*stripe.OAuthToken, error)
 	// client_secret is sent in the post body for this endpoint.
 	if stripe.StringValue(params.ClientSecret) == "" {
 		params.ClientSecret = stripe.String(stripe.Key)
-	}
-	if stripe.StringValue(params.GrantType) == "" {
-		params.GrantType = stripe.String("authorization_code")
 	}
 
 	oauthToken := &stripe.OAuthToken{}

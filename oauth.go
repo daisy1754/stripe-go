@@ -40,16 +40,6 @@ const (
 	OAuthStripeUserGenderMale   OAuthStripeUserGender = "male"
 )
 
-
-// DeauthorizeError the type of errors raised when failing authorization.
-type DeauthorizeError string
-
-// List of supported DeauthorizeError values.
-const (
-	DeauthorizeErrorInvalidClient  DeauthorizeError = "invalid_client"
-	DeauthorizeErrorInvalidRequest DeauthorizeError = "invalid_request"
-)
-
 // OAuthStripeUserParams for the stripe_user OAuth Authorize params.
 type OAuthStripeUserParams struct {
 	BlockKana          *string `form:"block_kana"`
@@ -61,9 +51,9 @@ type OAuthStripeUserParams struct {
 	City               *string `form:"city"`
 	Country            *string `form:"country"`
 	Currency           *string `form:"currency"`
-	DOBDay             *int64 `form:"dob_day"`
-	DOBMonth           *int64 `form:"dob_month"`
-	DOBYear            *int64 `form:"dob_year"`
+	DOBDay             *int64  `form:"dob_day"`
+	DOBMonth           *int64  `form:"dob_month"`
+	DOBYear            *int64  `form:"dob_year"`
 	Email              *string `form:"email"`
 	FirstName          *string `form:"first_name"`
 	FirstNameKana      *string `form:"first_name_kana"`
