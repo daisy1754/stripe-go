@@ -35,7 +35,8 @@ func (c Client) AuthorizeURL(params *stripe.AuthorizeURLParams) string {
 	qs := &form.Values{}
 	form.AppendTo(qs, params)
 	return fmt.Sprintf(
-		"https://connect.stripe.com%s/oauth/authorize?%s",
+		"%s%s/oauth/authorize?%s",
+    stripe.ConnectURL,
 		express,
 		qs.Encode(),
 	)

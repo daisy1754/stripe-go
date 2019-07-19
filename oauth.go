@@ -40,17 +40,6 @@ const (
 	OAuthStripeUserGenderMale   OAuthStripeUserGender = "male"
 )
 
-// OAuthError is the type of errors raised when failing authorization.
-type OAuthError string
-
-// List of supported OAuthError values.
-const (
-	OAuthErrorInvalidGrant            OAuthError = "invalid_grant"
-	OAuthErrorInvalidRequest          OAuthError = "invalid_request"
-	OAuthErrorInvalidScope            OAuthError = "invalid_scope"
-	OAuthErrorUnsupportedGrantType    OAuthError = "unsupported_grant_type"
-	OAuthErrorUnsupportedResponseType OAuthError = "unsupported_response_type"
-)
 
 // DeauthorizeError the type of errors raised when failing authorization.
 type DeauthorizeError string
@@ -72,9 +61,9 @@ type OAuthStripeUserParams struct {
 	City               *string `form:"city"`
 	Country            *string `form:"country"`
 	Currency           *string `form:"currency"`
-	DOBDay             *uint64 `form:"dob_day"`
-	DOBMonth           *uint64 `form:"dob_month"`
-	DOBYear            *uint64 `form:"dob_year"`
+	DOBDay             *int64 `form:"dob_day"`
+	DOBMonth           *int64 `form:"dob_month"`
+	DOBYear            *int64 `form:"dob_year"`
 	Email              *string `form:"email"`
 	FirstName          *string `form:"first_name"`
 	FirstNameKana      *string `form:"first_name_kana"`
@@ -132,12 +121,10 @@ type OAuthTokenParams struct {
 // OAuthToken is the value of the OAuthToken from OAuth flow.
 // https://stripe.com/docs/connect/oauth-reference#post-token
 type OAuthToken struct {
-	Error            OAuthError     `json:"error"`
-	ErrorDescription string         `json:"error_description"`
-	Livemode         bool           `json:"livemode"`
-	Scope            OAuthScopeType `json:"scope"`
-	StripeUserID     string         `json:"stripe_user_id"`
-	TokenType        OAuthTokenType `json:"token_type"`
+	Livemode     bool           `json:"livemode"`
+	Scope        OAuthScopeType `json:"scope"`
+	StripeUserID string         `json:"stripe_user_id"`
+	TokenType    OAuthTokenType `json:"token_type"`
 
 	// Deprecated, please use StripeUserID
 	AccessToken          string `json:"access_token"`
@@ -148,7 +135,5 @@ type OAuthToken struct {
 // Deauthorize is the value of the return from deauthorizing.
 // https://stripe.com/docs/connect/oauth-reference#post-deauthorize
 type Deauthorize struct {
-	Error            DeauthorizeError `json:"error"`
-	ErrorDescription string           `json:"error_description"`
-	StripeUserID     string           `json:"stripe_user_id"`
+	StripeUserID string `json:"stripe_user_id"`
 }

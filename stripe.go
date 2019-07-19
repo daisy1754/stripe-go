@@ -72,7 +72,7 @@ var Key string
 
 // ClientID is the Stripe Client ID used by default for OAuth requests.
 // Relevant OAuth parameter types can also be initialized with a specific
-// ClientID that will take precidence over this global ClientID.
+// ClientID that will take precedence over this global ClientID.
 var ClientID string
 
 //
@@ -778,7 +778,7 @@ func GetBackendWithConfig(backendType SupportedBackend, config *BackendConfig) B
 
 	case ConnectBackend:
 		if config.URL == "" {
-			config.URL = connectURL
+			config.URL = ConnectURL
 		}
 
 		config.URL = normalizeURL(config.URL)
@@ -908,9 +908,6 @@ func StringSlice(v []string) []*string {
 //
 
 const apiURL = "https://api.stripe.com"
-
-// URL Base used for OAuth requests.
-const connectURL = "https://connect.stripe.com"
 
 // clientversion is the binding version
 const clientversion = "61.20.0"

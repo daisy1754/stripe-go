@@ -46,9 +46,6 @@ func TestAuthorizeURLWithOptionalArgs(t *testing.T) {
 
 func TestAuthorizeURLWithStripeUser(t *testing.T) {
 	stripe.ClientID = "ca_123"
-	var dobDay uint64 = 15
-	var dobMonth uint64 = 10
-	var dobYear uint64 = 2019
 	url := AuthorizeURL(&stripe.AuthorizeURLParams{
 		ResponseType: stripe.String("test-code"),
 		StripeUser: &stripe.OAuthStripeUserParams{
@@ -61,9 +58,9 @@ func TestAuthorizeURLWithStripeUser(t *testing.T) {
 			City:               stripe.String("Elko"),
 			Country:            stripe.String("US"),
 			Currency:           stripe.String("USD"),
-			DOBDay:             &dobDay,
-			DOBMonth:           &dobMonth,
-			DOBYear:            &dobYear,
+			DOBDay:             stripe.Int64(15),
+			DOBMonth:           stripe.Int64(10),
+			DOBYear:            stripe.Int64(2019),
 			Email:              stripe.String("test@example.com"),
 			FirstName:          stripe.String("first-name"),
 			FirstNameKana:      stripe.String("first-name-kana"),
@@ -209,6 +206,39 @@ func TestNewOAuthTokenWithCustomKey(t *testing.T) {
 	})
 	assert.Nil(t, err)
 	assert.NotNil(t, token)
+}
+
+func TestNewOAuthTokenWithError(t *testing.T) {
+	stripe.Key = "sk_123"
+	// stripe-mock doesn't support connect URL's so this stubs out the server.
+
+	responseBody := `{"error":"invalid_grant","error_description": "Authorization code does not exist"}`
+	httpClient := NewTestClient(func(req *http.Request) *http.Response {
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(req.Body)
+		reqBody := buf.String()
+		assert.Contains(t, reqBody, "client_secret=sk_999")
+
+		return &http.Response{
+			StatusCode: 400,
+			Body:       ioutil.NopCloser(bytes.NewBufferString(responseBody)),
+			Header:     make(http.Header),
+		}
+	})
+	StubConnectBackend(httpClient)
+
+	token, err := New(&stripe.OAuthTokenParams{
+		ClientSecret: stripe.String("sk_999"),
+	})
+
+	assert.NotNil(t, token)
+	assert.NotNil(t, err)
+
+	stripeErr := err.(*stripe.Error)
+  // TODO: I think this is what I want to test once we get the structure right.
+	assert.Equal(t, 400, stripeErr.HTTPStatusCode)
+	assert.Equal(t, "Authorization code does not exist", stripeErr.Msg)
+	assert.Equal(t, "invalid_grant", stripeErr.Type)
 }
 
 func TestDeauthorize(t *testing.T) {

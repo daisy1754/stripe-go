@@ -546,7 +546,10 @@ func (f *Values) Encode() string {
 		if buf.Len() > 0 {
 			buf.WriteByte('&')
 		}
-		buf.WriteString(v.Key)
+		key := url.QueryEscape(v.Key)
+		key = strings.Replace(key, "%5B", "[", -1)
+		key = strings.Replace(key, "%5D", "]", -1)
+		buf.WriteString(key)
 		buf.WriteString("=")
 		buf.WriteString(url.QueryEscape(v.Value))
 	}
