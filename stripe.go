@@ -462,16 +462,20 @@ func (s *BackendImplementation) Do(req *http.Request, body *bytes.Buffer, v inte
 
 // ResponseToError converts a stripe response to an Error.
 func (s *BackendImplementation) ResponseToError(res *http.Response, resBody []byte) error {
+
 	var raw rawError
-	if err := s.UnmarshalJSONVerbose(res.StatusCode, resBody, &raw); err != nil {
-		// If deserializing the error json fails at the top level, we retry
-		// serializing at the error level because the shape of error response body
-		// for the API is different from the OAuth error response.
+	if s.Type == ConnectBackend {
+		// If this is an OAuth request, deserialize as Error because OAuth errors
+		// are a different shape from the standard API errors.
 		var topLevelError rawErrorInternal
 		if err := s.UnmarshalJSONVerbose(res.StatusCode, resBody, &topLevelError); err != nil {
 			return err
 		}
 		raw.E = &topLevelError
+	} else {
+		if err := s.UnmarshalJSONVerbose(res.StatusCode, resBody, &raw); err != nil {
+			return err
+		}
 	}
 
 	// no error in resBody
