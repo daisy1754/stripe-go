@@ -12,16 +12,14 @@ import (
 )
 
 func TestAuthorizeURL(t *testing.T) {
-	stripe.ClientID = "ca_123"
 	url := AuthorizeURL(&stripe.AuthorizeURLParams{})
 
-	assert.Contains(t, url, "https://connect.stripe.com/oauth/authorize?")
-	assert.Contains(t, url, "client_id=ca_123")
+	assert.Equal(t, url, "https://connect.stripe.com/oauth/authorize?")
 }
 
 func TestAuthorizeURLWithOptionalArgs(t *testing.T) {
-	stripe.ClientID = "ca_123"
 	url := AuthorizeURL(&stripe.AuthorizeURLParams{
+		ClientID:              stripe.String("ca_123"),
 		State:                 stripe.String("test-state"),
 		Scope:                 stripe.String("read_only"),
 		RedirectURI:           stripe.String("https://t.example.com"),
@@ -44,7 +42,6 @@ func TestAuthorizeURLWithOptionalArgs(t *testing.T) {
 }
 
 func TestAuthorizeURLWithStripeUser(t *testing.T) {
-	stripe.ClientID = "ca_123"
 	url := AuthorizeURL(&stripe.AuthorizeURLParams{
 		ResponseType: stripe.String("test-code"),
 		StripeUser: &stripe.OAuthStripeUserParams{

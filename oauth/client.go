@@ -26,9 +26,6 @@ func (c Client) AuthorizeURL(params *stripe.AuthorizeURLParams) string {
 	if stripe.BoolValue(params.Express) {
 		express = "/express"
 	}
-	if params.ClientID == nil {
-		params.ClientID = stripe.String(stripe.ClientID)
-	}
 	qs := &form.Values{}
 	form.AppendTo(qs, params)
 	return fmt.Sprintf(

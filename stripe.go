@@ -70,11 +70,6 @@ var EnableTelemetry = true
 // Key is the Stripe API key used globally in the binding.
 var Key string
 
-// ClientID is the Stripe Client ID used by default for OAuth requests.
-// Relevant OAuth parameter types can also be initialized with a specific
-// ClientID that will take precedence over this global ClientID.
-var ClientID string
-
 //
 // Public types
 //
