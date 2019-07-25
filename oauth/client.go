@@ -29,9 +29,6 @@ func (c Client) AuthorizeURL(params *stripe.AuthorizeURLParams) string {
 	if params.ClientID == nil {
 		params.ClientID = stripe.String(stripe.ClientID)
 	}
-	if params.ResponseType == nil {
-		params.ResponseType = stripe.String("code")
-	}
 	qs := &form.Values{}
 	form.AppendTo(qs, params)
 	return fmt.Sprintf(

@@ -17,7 +17,6 @@ func TestAuthorizeURL(t *testing.T) {
 
 	assert.Contains(t, url, "https://connect.stripe.com/oauth/authorize?")
 	assert.Contains(t, url, "client_id=ca_123")
-	assert.Contains(t, url, "response_type=code")
 }
 
 func TestAuthorizeURLWithOptionalArgs(t *testing.T) {
